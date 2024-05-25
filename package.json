@@ -13,8 +13,12 @@
   "dependencies": {
     "@prisma/client": "5.14.0",
     "next": "14.2.3",
+    "next-compose-plugins": "^2.2.1",
+    "next-images": "^1.8.5",
+    "next-transpile-modules": "^10.0.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-vant": "^3.3.5"
   },
   "devDependencies": {
     "@types/node": "^20",
