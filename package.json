@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "prisma generate && next dev",
+    "dev": "prisma generate && next dev -p 4000",
     "build": "prisma generate && prisma db push && next build",
     "start": "next start",
     "lint": "next lint",
@@ -13,8 +13,10 @@
   "dependencies": {
     "@prisma/client": "5.14.0",
     "@types/lodash": "^4.17.4",
+    "jose": "^5.4.0",
     "lodash": "^4.17.21",
     "next": "14.2.3",
+    "next-auth": "^5.0.0-beta.19",
     "next-compose-plugins": "^2.2.1",
     "next-images": "^1.8.5",
     "next-transpile-modules": "^10.0.1",

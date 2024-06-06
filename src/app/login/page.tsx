@@ -4,7 +4,7 @@ import {Button, Form, Input, Space, Typography} from 'react-vant'
 import styles from './page.module.css'
 import Link from 'next/link'
 import {login} from './login'
-import {toastResult} from '@/util'
+import {toastResult} from '@/util/toastResult'
 
 export const Login = () => {
   return (
@@ -26,7 +26,9 @@ export const Login = () => {
         }
         onFinish={async values => {
           const result = await login(values)
-          toastResult(result)
+          if (result) {
+            toastResult(result)
+          }
         }}
       >
         <Form.Item label="用户名" name="username">

@@ -12,13 +12,13 @@ export const register = async (values: RegisterFormValues) => {
       data: values,
     })
     return {
-      success: 1,
+      code: 1,
       msg: '注册成功',
     }
   } catch (e) {
     console.error(e)
     return {
-      success: 0,
+      code: 0,
       msg: e + '',
     }
   }

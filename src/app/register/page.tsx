@@ -4,7 +4,7 @@ import {Button, Form, Input, Space, Typography} from 'react-vant'
 import styles from './page.module.css'
 import Link from 'next/link'
 import {register} from './register'
-import {toastResult} from '@/util'
+import {toastResult} from '@/util/toastResult'
 
 export const Register = () => {
   return (

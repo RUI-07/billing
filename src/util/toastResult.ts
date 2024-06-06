@@ -1,13 +1,9 @@
+import {ActionResult} from '@/type'
 import {Toast} from 'react-vant'
 
-interface Result {
-  success: number
-  msg?: string
-}
-
-export const toastResult = (result: Result) => {
+export const toastResult = (result: ActionResult) => {
   if (!result.msg) return
-  if (result.success) {
+  if (result.code !== 0) {
     Toast.success(result.msg)
   } else {
     Toast.fail(result.msg)
