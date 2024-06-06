@@ -7,15 +7,19 @@
     "build": "prisma generate && prisma db push && next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate:dev": "dotenv -c -- npx prisma migrate dev",
-    "migrate:prod": "dotenv -c -- npx prisma migrate deploy"
+    "migrate:dev": "dotenv -c -- prisma migrate dev",
+    "migrate:prod": "dotenv -c -- prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "5.14.0",
+    "@types/lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "next": "14.2.3",
     "next-compose-plugins": "^2.2.1",
     "next-images": "^1.8.5",
     "next-transpile-modules": "^10.0.1",
+    "postcss-flexbugs-fixes": "^5.0.2",
+    "postcss-preset-env": "^9.5.14",
     "react": "^18",
     "react-dom": "^18",
     "react-vant": "^3.3.5"
@@ -24,9 +28,10 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.4.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
+    "postcss-px-to-viewport": "^1.1.1",
     "prisma": "^5.14.0",
     "typescript": "^5"
   }
