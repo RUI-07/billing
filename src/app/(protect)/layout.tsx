@@ -1,5 +1,6 @@
 import {cookieJwtCheck} from '@/util/cookieJwtCheck'
 import {redirect} from 'next/navigation'
+import {HomeTabbar} from './components/HomeTabbar'
 
 const isLogin = async () => {
   return cookieJwtCheck()
@@ -13,5 +14,10 @@ export default async function RootLayout({
   if (!(await isLogin())) {
     redirect('/login')
   }
-  return children
+  return (
+    <main>
+      {children}
+      <HomeTabbar />
+    </main>
+  )
 }

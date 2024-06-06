@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@prisma/client": "5.14.0",
+    "@react-vant/icons": "^0.1.0",
     "@types/lodash": "^4.17.4",
     "jose": "^5.4.0",
     "lodash": "^4.17.21",

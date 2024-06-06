@@ -3,6 +3,7 @@ import {prisma} from '@/lib/prisma'
 import {cookies} from 'next/headers'
 import {signJwt} from './signJwt'
 import {redirect} from 'next/navigation'
+import {HOME_PAGE} from '@/constant'
 
 interface LoginFormValues {
   username: string
@@ -37,7 +38,7 @@ export const login = async (values: LoginFormValues) => {
     }
   } finally {
     if (success) {
-      redirect('/')
+      redirect(HOME_PAGE)
     }
   }
 }
