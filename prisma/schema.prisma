@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL")
+  url       = env("POSTGRES_URL")
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
@@ -25,4 +25,19 @@ model User {
   @@index([createdAt])
   @@index([updatedAt])
   @@map("user")
+}
+
+model Customer {
+  id           BigInt       @id @default(autoincrement()) @db.BigInt
+  name         String       @db.VarChar(64)
+  type         CustomerType
+  statsStartAt DateTime     @db.Timestamp(0)
+  phone        String?
+  user         BigInt       @db.BigInt
+  @@map("customer")
+}
+
+enum CustomerType {
+  Selling
+  Purchase
 }
