@@ -1,7 +1,7 @@
 'use client'
-
 import {CustomerType} from '@prisma/client'
 import {Button, Calendar, Cell, Form, Input, Selector, SelectorProps, Typography} from 'react-vant'
+import {createCustomer} from './actions'
 
 const customerTypeOptions: SelectorProps<CustomerType>['options'] = [
   {
@@ -14,7 +14,7 @@ const customerTypeOptions: SelectorProps<CustomerType>['options'] = [
   },
 ]
 
-interface CreateCustomerValues {
+interface FormValues {
   name: string
   type: [CustomerType]
   statsStartAt: Date
@@ -32,8 +32,12 @@ const CustomerCreate = () => {
           type: CustomerType.Selling,
           statsStartAt: new Date(),
         }}
-        onFinish={(values: CreateCustomerValues) => {
+        onFinish={(values: FormValues) => {
           console.log('values', values)
+          createCustomer({
+            ...values,
+            type: values.type[0],
+          })
         }}
         footer={
           <div style={{margin: '16px 16px 0'}}>

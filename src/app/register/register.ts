@@ -1,5 +1,7 @@
 'use server'
 import {prisma} from '@/lib/prisma'
+import {ResultCode} from '@/type'
+import {errorToResult} from '@/util/errorToResult'
 
 interface RegisterFormValues {
   username: string
@@ -12,14 +14,10 @@ export const register = async (values: RegisterFormValues) => {
       data: values,
     })
     return {
-      code: 1,
+      code: ResultCode.SUCCESS,
       msg: '注册成功',
     }
   } catch (e) {
-    console.error(e)
-    return {
-      code: 0,
-      msg: e + '',
-    }
+    return errorToResult(e)
   }
 }
