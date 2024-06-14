@@ -1,0 +1,15 @@
+.add {
+  position: fixed;
+  bottom: 80px;
+  right: 32px;
+  border-radius: 100%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  background: var(--rv-button-primary-background-color);
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}

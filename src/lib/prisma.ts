@@ -1,9 +1,7 @@
 import {PrismaClient} from '@prisma/client'
 
-declare global {
-  var prisma: PrismaClient | undefined
-}
+// @ts-ignore
+export const prisma: PrismaClient = global.prisma || new PrismaClient()
 
-export const prisma = global.prisma || new PrismaClient()
-
+// @ts-ignore
 if (process.env.NODE_ENV === 'development') global.prisma = prisma

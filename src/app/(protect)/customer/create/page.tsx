@@ -2,6 +2,9 @@
 import {CustomerType} from '@prisma/client'
 import {Button, Calendar, Cell, Form, Input, Selector, SelectorProps, Typography} from 'react-vant'
 import {createCustomer} from './actions'
+import {ResultCode} from '@/type'
+import {toastResult} from '@/util/toastResult'
+import {useRouter} from 'next/navigation'
 
 const customerTypeOptions: SelectorProps<CustomerType>['options'] = [
   {
@@ -16,12 +19,14 @@ const customerTypeOptions: SelectorProps<CustomerType>['options'] = [
 
 interface FormValues {
   name: string
-  type: [CustomerType]
+  type: CustomerType
   statsStartAt: Date
   phone?: string
 }
 
 const CustomerCreate = () => {
+  const router = useRouter()
+
   return (
     <div>
       <div style={{textAlign: 'center'}}>
@@ -32,12 +37,14 @@ const CustomerCreate = () => {
           type: CustomerType.Selling,
           statsStartAt: new Date(),
         }}
-        onFinish={(values: FormValues) => {
+        onFinish={async (values: FormValues) => {
           console.log('values', values)
-          createCustomer({
-            ...values,
-            type: values.type[0],
-          })
+          const result = await createCustomer(values)
+          if (result.code !== ResultCode.SUCCESS) {
+            toastResult(result)
+          } else {
+            router.replace('/customer')
+          }
         }}
         footer={
           <div style={{margin: '16px 16px 0'}}>

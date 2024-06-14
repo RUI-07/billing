@@ -1,14 +1,14 @@
-import {jwtDecrypt} from 'jose'
+import {jwtVerify} from 'jose'
 import {cookies} from 'next/headers'
 import {JwtUserInfo} from '@/type'
 
 export const getUser = async (): Promise<JwtUserInfo | null> => {
   try {
     const cookieStore = cookies()
-    const jwt = cookieStore.get('jwt')
+    const jwt = cookieStore.get('jwt')?.value
     if (!jwt) return null
     const secret = new TextEncoder().encode(process.env.SECRET)
-    const result = await jwtDecrypt<JwtUserInfo>(jwt.value, secret)
+    const result = await jwtVerify<JwtUserInfo>(jwt, secret)
     return result.payload
   } catch (e) {
     console.error(e)

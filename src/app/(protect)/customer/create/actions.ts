@@ -6,6 +6,7 @@ import {errorToResult} from '@/util/errorToResult'
 import {fillUser} from '@/util/getUser'
 import {customerSchema} from '@/zod'
 import {z} from 'zod'
+import {prisma} from '@/lib/prisma'
 
 const CreateCustomerDto = customerSchema.pick({
   name: true,
@@ -19,9 +20,9 @@ export const createCustomer = guard(
     try {
       const customer = CreateCustomerDto.parse(values)
       if (!userInfo) {
-        return {code: ResultCode.UNAUTHENTICATED}
+        return {code: ResultCode.UNAUTHENTICATED, msg: '请先登入'}
       }
-      await prisma?.customer.create({
+      await prisma.customer.create({
         data: {
           ...customer,
           user: BigInt(userInfo.id),
