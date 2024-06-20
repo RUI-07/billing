@@ -1,12 +1,27 @@
+-- CreateEnum
+CREATE TYPE "CustomerType" AS ENUM ('Selling', 'Purchase');
+
 -- CreateTable
 CREATE TABLE "user" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "username" VARCHAR(64) NOT NULL,
     "password" CHAR(60) NOT NULL,
     "createdAt" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "customer" (
+    "id" SERIAL NOT NULL,
+    "name" VARCHAR(64) NOT NULL,
+    "type" "CustomerType" NOT NULL,
+    "statsStartAt" TIMESTAMP(0) NOT NULL,
+    "phone" TEXT,
+    "user" INTEGER NOT NULL,
+
+    CONSTRAINT "customer_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

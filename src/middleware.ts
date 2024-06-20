@@ -2,9 +2,8 @@ import {NextResponse} from 'next/server'
 import type {NextRequest} from 'next/server'
 
 export function middleware(request: NextRequest) {
-  const headers = new Headers(request.headers)
+  const headers = new Headers()
   headers.set('x-current-path', request.nextUrl.pathname)
-  console.log('test', request.nextUrl.pathname)
   return NextResponse.next({headers})
 }
 

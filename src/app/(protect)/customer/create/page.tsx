@@ -38,7 +38,6 @@ const CustomerCreate = () => {
           statsStartAt: new Date(),
         }}
         onFinish={async (values: FormValues) => {
-          console.log('values', values)
           const result = await createCustomer(values)
           if (result.code !== ResultCode.SUCCESS) {
             toastResult(result)

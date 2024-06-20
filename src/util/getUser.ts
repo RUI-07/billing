@@ -1,6 +1,6 @@
 import {jwtVerify} from 'jose'
 import {cookies} from 'next/headers'
-import {JwtUserInfo} from '@/type'
+import {ActionResult, JwtUserInfo, ResultCode} from '@/type'
 
 export const getUser = async (): Promise<JwtUserInfo | null> => {
   try {
@@ -16,11 +16,17 @@ export const getUser = async (): Promise<JwtUserInfo | null> => {
   }
 }
 
-export function fillUser<T extends readonly any[], U extends Promise<any>>(
-  fn: (userInfo: JwtUserInfo | null, ...args: T) => U,
+export function fillUser<T extends readonly any[], U extends Record<string, any> | undefined>(
+  fn: (userInfo: JwtUserInfo, ...args: T) => Promise<ActionResult<U>>,
 ) {
-  return async (...args: T): Promise<Awaited<U>> => {
+  return async (...args: T): Promise<ActionResult<U>> => {
     const userInfo = await getUser()
+    if (!userInfo) {
+      return {
+        code: ResultCode.UNAUTHENTICATED,
+        msg: '无用户信息',
+      }
+    }
     return await fn(userInfo, ...args)
   }
 }

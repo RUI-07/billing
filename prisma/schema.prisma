@@ -22,7 +22,7 @@ generator zod {
 }
 
 model User {
-  id        BigInt   @id @default(autoincrement()) @db.BigInt
+  id        Int   @id @default(autoincrement()) @db.Integer
   username  String   @unique @db.VarChar(64)
   password  String   @db.Char(60)
   createdAt DateTime @default(now()) @db.Timestamp(0)
@@ -35,12 +35,12 @@ model User {
 }
 
 model Customer {
-  id           BigInt       @id @default(autoincrement()) @db.BigInt
+  id           Int       @id @default(autoincrement()) @db.Integer
   name         String       @db.VarChar(64)
   type         CustomerType
   statsStartAt DateTime     @db.Timestamp(0)
   phone        String?
-  user         BigInt       @db.BigInt
+  user         Int       @db.Integer
 
   @@map("customer")
 }

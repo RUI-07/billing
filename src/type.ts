@@ -10,9 +10,10 @@ export enum ResultCode {
   UNKNOWN_ERROR = 9999,
 }
 
-export interface ActionResult {
+export type ActionResult<T extends Record<string, any> | undefined = undefined> = {
   code: ResultCode
   msg?: string
+  data?: T
 }
 
 export interface JwtUserInfo {

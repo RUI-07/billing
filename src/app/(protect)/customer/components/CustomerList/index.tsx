@@ -1,7 +1,34 @@
 'use client'
-import {CustomerType} from '@prisma/client'
+import {Customer, CustomerType} from '@prisma/client'
 import {useState} from 'react'
-import {Card, Dialog, DropdownMenu, Input} from 'react-vant'
+import {Cell, Input, List} from 'react-vant'
+import formatDate from 'dateformat'
+import {ActionSheetTrigger} from '@/components/ActionSheetTrigger'
+import {getCustomersByCursor} from './getCustomersByCursor'
+import {ResultCode} from '@/type'
+import {toastResult} from '@/util/toastResult'
+import {useListGenerator} from '@/hooks/useListGenerator'
+
+async function* customersGen(defaultIndex?: number, keyword?: string) {
+  const size = 5
+  let hasMore = true
+  let nextId = defaultIndex
+  while (hasMore) {
+    const res = await getCustomersByCursor({
+      size,
+      index: nextId,
+    })
+    if (res.code !== ResultCode.SUCCESS) {
+      toastResult(res)
+      hasMore = false
+      return
+    } else {
+      const list = res.data?.list || []
+      hasMore = list.length >= size
+      yield list
+    }
+  }
+}
 
 const CustomerTypeOptions = [
   {
@@ -13,90 +40,80 @@ const CustomerTypeOptions = [
     value: CustomerType.Purchase,
   },
 ]
-
-export const CustomerList = () => {
+interface CustomerListProps {
+  defaultList?: Customer[]
+}
+export const CustomerList = (props: CustomerListProps) => {
+  const {defaultList = []} = props
   const [search, setSearch] = useState('')
 
-  // const {data: list, run} = useRequest(
-  //   async (keyword?: string) => {
-  //     const {data} = await api.customer.list({name: keyword})
-  //     return data.data
-  //   },
-  //   {
-  //     onError(e) {
-  //       showTopTips.error(e.name)
-  //     },
-  //   },
-  // )
-
-  // const handleSearch = useMemo(() => {
-  //   return debounce({delay: 300}, (keyword: string) => {
-  //     run(keyword)
-  //   })
-  // }, [run])
+  const defaultIndex = defaultList.findLast(() => true)?.id
+  const {list, reload, done, loadMore} = useListGenerator(customersGen, [defaultIndex], {
+    defaultList,
+  })
 
   // const [deleteId, setDeleteId] = useState<string>()
   // const handleDelete = () => {
   //   // api.customer.delete()
   // }
 
-  const list: Record<string, string>[] = []
-
   return (
     <>
-      <div className="pb-2">
-        <div>
-          <Input clearable />
-        </div>
-
-        <div className="px-4">
-          {list?.map(item => {
+      <div>
+        <Cell>
+          <Input
+            placeholder="请输入搜索关键字"
+            clearable
+            onChange={v => {
+              reload(undefined, v)
+            }}
+          />
+        </Cell>
+        <List
+          onLoad={async () => {
+            await loadMore()
+          }}
+          finished={done}
+        >
+          {list?.map((item, index) => {
             return (
-              <Card key={item._id + ''}>
-                <Card.Body>
+              <Cell key={index}>
+                <div>
                   <div>
-                    <span>客户名称</span>
+                    <span>客户ID：</span>
+                    <span>{item.id}</span>
+                  </div>
+                  <div>
+                    <span>客户名称：</span>
                     <span>{item.name}</span>
                   </div>
                   <div>
-                    <span>客户类型</span>
+                    <span>客户类型：</span>
                     <span>{CustomerTypeOptions.find(option => option.value === item.type)?.label || ''}</span>
                   </div>
                   <div>
-                    <span>始记账日</span>
+                    <span>始记账日：</span>
                     <span>{formatDate(item.statsStartAt, 'yyyy年mm月dd日')}</span>
                   </div>
                   <div>
-                    <span>客户电话</span>
+                    <span>客户电话：</span>
                     <span>
                       <a href={`tel:${item.phone}`} className="text-blue-600">
                         {item.phone}
                       </a>
                     </span>
                   </div>
-                </Card.Body>
-                <Card.Footer>
-                  <span>
-                    <div>账本</div>
-                  </span>
-                  <span>
-                    <DropdownMenu direction="up">
-                      <DropdownMenu.Item
-                        name="value1"
-                        options={[
-                          {value: 'edit', text: '编辑'},
-                          {value: 'delete', text: '删除'},
-                        ]}
-                      >
-                        更多
-                      </DropdownMenu.Item>
-                    </DropdownMenu>
-                  </span>
-                </Card.Footer>
-              </Card>
+                  <div>
+                    <span>账本</span>
+                    <ActionSheetTrigger actions={[{name: '编辑'}, {name: '删除'}]} cancelText="取消">
+                      <span>更多</span>
+                    </ActionSheetTrigger>
+                  </div>
+                </div>
+              </Cell>
             )
           })}
-        </div>
+        </List>
       </div>
       {
         // <Dialog

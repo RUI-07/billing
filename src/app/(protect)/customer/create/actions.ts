@@ -25,7 +25,7 @@ export const createCustomer = guard(
       await prisma.customer.create({
         data: {
           ...customer,
-          user: BigInt(userInfo.id),
+          user: parseInt(userInfo.id),
         },
       })
       return {
