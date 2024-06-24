@@ -5,7 +5,7 @@ interface ActionSheetTriggerProps extends Omit<ActionSheetProps, 'visible'> {
   children: ReactElement
 }
 export const ActionSheetTrigger = (props: ActionSheetTriggerProps) => {
-  const {children, onClose, ...others} = props
+  const {children, onClose, onSelect, ...others} = props
   const [visible, setVisible] = useState(false)
 
   return (
@@ -22,6 +22,10 @@ export const ActionSheetTrigger = (props: ActionSheetTriggerProps) => {
         onClose={() => {
           setVisible(false)
           onClose?.()
+        }}
+        onSelect={(...args) => {
+          onSelect?.(...args)
+          setVisible(false)
         }}
       />
     </>

@@ -36,6 +36,7 @@ export function useListGenerator<T extends any[], U extends AsyncGenerator<V[], 
   const reload = async (...args: T) => {
     const newGenerator = createGenerator(...args)
     generatorRef.current = newGenerator
+    setList([])
     setGenerator(newGenerator)
     setDone(false)
     return loadMore()

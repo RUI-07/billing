@@ -1,13 +1,16 @@
 'use client'
 import {Customer, CustomerType} from '@prisma/client'
-import {useState} from 'react'
-import {Cell, Input, List} from 'react-vant'
+import {useCallback, useMemo, useState} from 'react'
+import {Cell, Dialog, Input, List, Space} from 'react-vant'
 import formatDate from 'dateformat'
 import {ActionSheetTrigger} from '@/components/ActionSheetTrigger'
 import {getCustomersByCursor} from './getCustomersByCursor'
 import {ResultCode} from '@/type'
 import {toastResult} from '@/util/toastResult'
 import {useListGenerator} from '@/hooks/useListGenerator'
+import {debounce} from 'lodash'
+import Styles from './index.module.css'
+import {useRouter} from 'next/navigation'
 
 async function* customersGen(defaultIndex?: number, keyword?: string) {
   const size = 5
@@ -17,6 +20,7 @@ async function* customersGen(defaultIndex?: number, keyword?: string) {
     const res = await getCustomersByCursor({
       size,
       index: nextId,
+      keyword,
     })
     if (res.code !== ResultCode.SUCCESS) {
       toastResult(res)
@@ -26,6 +30,8 @@ async function* customersGen(defaultIndex?: number, keyword?: string) {
       const list = res.data?.list || []
       hasMore = list.length >= size
       yield list
+      nextId = res.data?.nextId
+      if (!nextId) return
     }
   }
 }
@@ -45,87 +51,83 @@ interface CustomerListProps {
 }
 export const CustomerList = (props: CustomerListProps) => {
   const {defaultList = []} = props
-  const [search, setSearch] = useState('')
+  const router = useRouter()
 
   const defaultIndex = defaultList.findLast(() => true)?.id
   const {list, reload, done, loadMore} = useListGenerator(customersGen, [defaultIndex], {
     defaultList,
   })
 
-  // const [deleteId, setDeleteId] = useState<string>()
-  // const handleDelete = () => {
-  //   // api.customer.delete()
-  // }
+  const handleSearch = useMemo(() => {
+    return debounce((v: string) => {
+      reload(undefined, v)
+    }, 300)
+  }, [reload])
 
   return (
-    <>
-      <div>
-        <Cell>
-          <Input
-            placeholder="请输入搜索关键字"
-            clearable
-            onChange={v => {
-              reload(undefined, v)
-            }}
-          />
-        </Cell>
-        <List
-          onLoad={async () => {
-            await loadMore()
-          }}
-          finished={done}
-        >
-          {list?.map((item, index) => {
-            return (
-              <Cell key={index}>
-                <div>
+    <div>
+      <Cell>
+        <Input placeholder="请输入搜索关键字" clearable onChange={handleSearch} />
+      </Cell>
+      <List
+        className={Styles.list}
+        onLoad={async () => {
+          await loadMore()
+        }}
+        finished={done}
+      >
+        {list?.map((item, index) => {
+          const customerTypeText = CustomerTypeOptions.find(option => option.value === item.type)?.label || ''
+          return (
+            <div key={index} className={Styles.item}>
+              <div className={Styles.main}>
+                <div className={Styles.title}>{item.name}</div>
+                <div className={Styles.secondary}>{customerTypeText}</div>
+                <div className={Styles.content}>
                   <div>
-                    <span>客户ID：</span>
-                    <span>{item.id}</span>
-                  </div>
-                  <div>
-                    <span>客户名称：</span>
-                    <span>{item.name}</span>
-                  </div>
-                  <div>
-                    <span>客户类型：</span>
-                    <span>{CustomerTypeOptions.find(option => option.value === item.type)?.label || ''}</span>
-                  </div>
-                  <div>
-                    <span>始记账日：</span>
+                    <span className={Styles.secondary}>始记账日</span>
                     <span>{formatDate(item.statsStartAt, 'yyyy年mm月dd日')}</span>
                   </div>
                   <div>
-                    <span>客户电话：</span>
+                    <span className={Styles.secondary}>客户电话</span>
                     <span>
                       <a href={`tel:${item.phone}`} className="text-blue-600">
                         {item.phone}
                       </a>
                     </span>
                   </div>
-                  <div>
-                    <span>账本</span>
-                    <ActionSheetTrigger actions={[{name: '编辑'}, {name: '删除'}]} cancelText="取消">
-                      <span>更多</span>
-                    </ActionSheetTrigger>
-                  </div>
                 </div>
-              </Cell>
-            )
-          })}
-        </List>
-      </div>
-      {
-        // <Dialog
-        //   visible={!!deleteId}
-        //   onClose={() => setDeleteId(undefined)}
-        //   title="确认删除"
-        //   action={{
-        //     main: <div onClick={handleDelete}>删除</div>,
-        //     secondary: '取消',
-        //   }}
-        // />
-      }
-    </>
+              </div>
+              <div className={Styles.footer}>
+                <ActionSheetTrigger
+                  actions={[{name: '编辑'}, {name: '删除', className: Styles.red}]}
+                  cancelText="取消"
+                  onSelect={action => {
+                    switch (action.name) {
+                      case '删除': {
+                        Dialog.confirm({
+                          title: '确认删除？',
+                          onConfirm() {
+                            console.log('delete')
+                          },
+                        })
+                        break
+                      }
+                      case '编辑': {
+                        router.push(`/customer/create?id=${item.id}`)
+                        break
+                      }
+                    }
+                  }}
+                >
+                  <span>更多</span>
+                </ActionSheetTrigger>
+                <span>账本</span>
+              </div>
+            </div>
+          )
+        })}
+      </List>
+    </div>
   )
 }
