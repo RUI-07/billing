@@ -19,7 +19,7 @@ export const errorToResult = (e: unknown): ActionResult => {
   console.error(e)
   if (e instanceof ZodError) {
     return {
-      code: ResultCode.PARAM_INVALID,
+      code: ResultCode.PARAM_ERROR,
       msg: e.issues.map(item => item.message).join('\n'),
     }
   } else if (prismaErros.some(error => e instanceof error)) {

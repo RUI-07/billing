@@ -11,6 +11,7 @@ import {useListGenerator} from '@/hooks/useListGenerator'
 import {debounce} from 'lodash'
 import Styles from './index.module.css'
 import {useRouter} from 'next/navigation'
+import {removeCustomer} from './removeCustomer'
 
 async function* customersGen(defaultIndex?: number, keyword?: string) {
   const size = 5
@@ -58,8 +59,10 @@ export const CustomerList = (props: CustomerListProps) => {
     defaultList,
   })
 
+  const [search, setSearch] = useState('')
   const handleSearch = useMemo(() => {
     return debounce((v: string) => {
+      setSearch(v)
       reload(undefined, v)
     }, 300)
   }, [reload])
@@ -67,7 +70,7 @@ export const CustomerList = (props: CustomerListProps) => {
   return (
     <div>
       <Cell>
-        <Input placeholder="请输入搜索关键字" clearable onChange={handleSearch} />
+        <Input value={search} placeholder="请输入搜索关键字" clearable onChange={handleSearch} />
       </Cell>
       <List
         className={Styles.list}
@@ -107,8 +110,12 @@ export const CustomerList = (props: CustomerListProps) => {
                       case '删除': {
                         Dialog.confirm({
                           title: '确认删除？',
-                          onConfirm() {
+                          onConfirm: async () => {
                             console.log('delete')
+                            await removeCustomer({
+                              id: item.id,
+                            })
+                            reload(undefined, search)
                           },
                         })
                         break

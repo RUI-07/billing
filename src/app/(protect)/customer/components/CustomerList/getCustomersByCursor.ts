@@ -1,8 +1,7 @@
 'use server'
 import {prisma} from '@/lib/prisma'
 import {ResultCode} from '@/type'
-import {guard} from '@/util/actionGuard'
-import {fillUser} from '@/util/getUser'
+import {defineAction} from '@/util/defineAction'
 import {z} from 'zod'
 
 const getCustomersByCursorDto = z.object({
@@ -12,55 +11,55 @@ const getCustomersByCursorDto = z.object({
 })
 type GetCustomersByCursorDto = z.infer<typeof getCustomersByCursorDto>
 
-export const getCustomersByCursor = guard(
-  fillUser(async (userInfo, params: GetCustomersByCursorDto) => {
-    const {index, size, keyword} = getCustomersByCursorDto.parse(params)
-    const userId = parseInt(userInfo.id)
+export const getCustomersByCursor = defineAction(async (userInfo, params: GetCustomersByCursorDto) => {
+  const {index, size, keyword} = getCustomersByCursorDto.parse(params)
+  const userId = parseInt(userInfo.id)
 
-    const firstPage = !index
+  const firstPage = !index
 
-    let cursorId
-    if (firstPage) {
-      const firstCustomer = await prisma.customer.findFirst({
+  let cursorId
+  if (firstPage) {
+    const firstCustomer = await prisma.customer.findFirst({
+      where: {
+        user: userId,
+        isDeleted: false,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    })
+    cursorId = firstCustomer?.id
+  } else {
+    cursorId = index
+  }
+
+  const customers = cursorId
+    ? await prisma.customer.findMany({
+        cursor: {
+          id: cursorId,
+        },
+        take: size,
+        skip: firstPage ? 0 : 1,
         where: {
+          name: {
+            contains: keyword,
+          },
           user: userId,
+          isDeleted: false,
         },
         orderBy: {
           id: 'desc',
         },
       })
-      cursorId = firstCustomer?.id
-    } else {
-      cursorId = index
-    }
+    : []
 
-    const customers = cursorId
-      ? await prisma.customer.findMany({
-          cursor: {
-            id: cursorId,
-          },
-          take: size,
-          skip: firstPage ? 0 : 1,
-          where: {
-            name: {
-              contains: keyword,
-            },
-            user: userId,
-          },
-          orderBy: {
-            id: 'desc',
-          },
-        })
-      : []
+  const lastCustomers = customers.slice(-1)[0]
 
-    const lastCustomers = customers.slice(-1)[0]
-
-    return {
-      code: ResultCode.SUCCESS,
-      data: {
-        list: customers,
-        nextId: lastCustomers?.id,
-      },
-    }
-  }),
-)
+  return {
+    code: ResultCode.SUCCESS,
+    data: {
+      list: customers,
+      nextId: lastCustomers?.id,
+    },
+  }
+})
