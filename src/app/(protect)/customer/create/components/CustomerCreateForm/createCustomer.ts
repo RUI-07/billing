@@ -1,12 +1,10 @@
 'use server'
-
 import {JwtUserInfo, ResultCode} from '@/type'
-import {guard} from '@/util/actionGuard'
 import {errorToResult} from '@/util/errorToResult'
-import {fillUser} from '@/util/getUser'
 import {customerSchema} from '@/zod'
 import {z} from 'zod'
 import {prisma} from '@/lib/prisma'
+import {defineAction} from '@/util/defineAction'
 
 const CreateCustomerDto = customerSchema.pick({
   name: true,
@@ -15,8 +13,8 @@ const CreateCustomerDto = customerSchema.pick({
   phone: true,
 })
 
-export const createCustomer = guard(
-  fillUser(async (userInfo: JwtUserInfo | null, values: z.infer<typeof CreateCustomerDto>) => {
+export const createCustomer = defineAction(
+  async (userInfo: JwtUserInfo | null, values: z.infer<typeof CreateCustomerDto>) => {
     try {
       const customer = CreateCustomerDto.parse(values)
       if (!userInfo) {
@@ -34,5 +32,5 @@ export const createCustomer = guard(
     } catch (e) {
       return errorToResult(e)
     }
-  }),
+  },
 )
