@@ -49,9 +49,11 @@ const CustomerTypeOptions = [
 ]
 interface CustomerListProps {
   defaultList?: Customer[]
+  selectable?: boolean
+  onSelect?: (item: Customer) => void
 }
 export const CustomerList = (props: CustomerListProps) => {
-  const {defaultList = []} = props
+  const {defaultList = [], selectable, onSelect} = props
   const router = useRouter()
 
   const defaultIndex = defaultList.findLast(() => true)?.id
@@ -68,7 +70,7 @@ export const CustomerList = (props: CustomerListProps) => {
   }, [reload])
 
   return (
-    <div>
+    <div className={Styles.listWrap}>
       <Cell>
         <Input value={search} placeholder="请输入搜索关键字" clearable onChange={handleSearch} />
       </Cell>
@@ -82,7 +84,7 @@ export const CustomerList = (props: CustomerListProps) => {
         {list?.map((item, index) => {
           const customerTypeText = CustomerTypeOptions.find(option => option.value === item.type)?.label || ''
           return (
-            <div key={index} className={Styles.item}>
+            <div key={index} className={Styles.item} onClick={() => onSelect?.(item)}>
               <div className={Styles.main}>
                 <div className={Styles.title}>{item.name}</div>
                 <div className={Styles.secondary}>{customerTypeText}</div>
@@ -101,36 +103,38 @@ export const CustomerList = (props: CustomerListProps) => {
                   </div>
                 </div>
               </div>
-              <div className={Styles.footer}>
-                <ActionSheetTrigger
-                  actions={[{name: '编辑'}, {name: '删除', className: Styles.red}]}
-                  cancelText="取消"
-                  onSelect={action => {
-                    switch (action.name) {
-                      case '删除': {
-                        Dialog.confirm({
-                          title: '确认删除？',
-                          onConfirm: async () => {
-                            console.log('delete')
-                            await removeCustomer({
-                              id: item.id,
-                            })
-                            reload(undefined, search)
-                          },
-                        })
-                        break
+              {!selectable && (
+                <div className={Styles.footer}>
+                  <ActionSheetTrigger
+                    actions={[{name: '编辑'}, {name: '删除', className: Styles.red}]}
+                    cancelText="取消"
+                    onSelect={action => {
+                      switch (action.name) {
+                        case '删除': {
+                          Dialog.confirm({
+                            title: '确认删除？',
+                            onConfirm: async () => {
+                              console.log('delete')
+                              await removeCustomer({
+                                id: item.id,
+                              })
+                              reload(undefined, search)
+                            },
+                          })
+                          break
+                        }
+                        case '编辑': {
+                          router.push(`/customer/create?id=${item.id}`)
+                          break
+                        }
                       }
-                      case '编辑': {
-                        router.push(`/customer/create?id=${item.id}`)
-                        break
-                      }
-                    }
-                  }}
-                >
-                  <span>更多</span>
-                </ActionSheetTrigger>
-                <span>账本</span>
-              </div>
+                    }}
+                  >
+                    <span>更多</span>
+                  </ActionSheetTrigger>
+                  <span>账本</span>
+                </div>
+              )}
             </div>
           )
         })}

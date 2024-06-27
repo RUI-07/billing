@@ -1,3 +1,7 @@
+.listWrap {
+  background: #f6f7fb;
+}
+
 .list {
   .item {
     background: white;
