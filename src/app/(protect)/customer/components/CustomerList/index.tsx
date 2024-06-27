@@ -1,17 +1,17 @@
 'use client'
 import {Customer, CustomerType} from '@prisma/client'
-import {useCallback, useMemo, useState} from 'react'
-import {Cell, Dialog, Input, List, Space} from 'react-vant'
+import {useMemo, useState} from 'react'
+import {Cell, Dialog, Input, List} from 'react-vant'
 import formatDate from 'dateformat'
 import {ActionSheetTrigger} from '@/components/ActionSheetTrigger'
-import {getCustomersByCursor} from './getCustomersByCursor'
+import {getCustomersByCursor} from '@/actions/customer/getCustomersByCursor'
 import {ResultCode} from '@/type'
 import {toastResult} from '@/util/toastResult'
 import {useListGenerator} from '@/hooks/useListGenerator'
 import {debounce} from 'lodash'
 import Styles from './index.module.css'
 import {useRouter} from 'next/navigation'
-import {removeCustomer} from './removeCustomer'
+import {removeCustomer} from '@/actions/customer/removeCustomer'
 
 async function* customersGen(defaultIndex?: number, keyword?: string) {
   const size = 5

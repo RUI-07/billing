@@ -1,11 +1,11 @@
 'use client'
 import {CustomerType} from '@prisma/client'
 import {Button, Calendar, Cell, Form, Input, Radio, Typography} from 'react-vant'
-import {createCustomer} from './createCustomer'
+import {createCustomer} from '@/actions/customer/createCustomer'
 import {ResultCode} from '@/type'
 import {toastResult} from '@/util/toastResult'
 import {useRouter} from 'next/navigation'
-import {editCustomer} from './editCutomer'
+import {editCustomer} from '@/actions/customer/editCutomer'
 
 interface FormValues {
   name: string

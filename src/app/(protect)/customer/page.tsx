@@ -1,6 +1,6 @@
 import {AddCustomer} from './components/AddCustomer'
 import {CustomerList} from './components/CustomerList'
-import {getCustomersByCursor} from './components/CustomerList/getCustomersByCursor'
+import {getCustomersByCursor} from '@/actions/customer/getCustomersByCursor'
 
 const Customer = async () => {
   const customers = await getCustomersByCursor({
