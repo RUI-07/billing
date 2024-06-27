@@ -53,6 +53,34 @@ model Customer {
   @@map("customer")
 }
 
+model Bill {
+  id        Int      @id @default(autoincrement()) @db.Integer
+  user      Int      @db.Integer
+  date      DateTime @db.Timestamp(0)
+  customer  Int      @db.Integer
+  isDeleted Boolean  @default(false) @db.Boolean
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  @@index([user])
+  @@map("bill")
+}
+
+model BillItem {
+  id        Int      @id @default(autoincrement()) @db.Integer
+  bill      Int      @db.Integer
+  name      String   @db.VarChar(64)
+  quantity  Int      @db.Integer
+  price     Int      @db.Integer
+  total     Int      @db.Integer
+  isDeleted Boolean  @default(false) @db.Boolean
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  @@index([bill])
+  @@map("bill_item")
+}
+
 enum CustomerType {
   Selling
   Purchase
