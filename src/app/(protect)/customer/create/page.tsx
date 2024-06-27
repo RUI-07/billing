@@ -1,5 +1,5 @@
 import { getCustomer } from '@/actions/customer/getCustomer'
-import {CustomerCreateForm} from './components/CustomerCreateForm'
+import {CustomerCreateForm} from '@/components/customer/CustomerCreateForm'
 
 interface CustomerCreateProps {
   searchParams: {

@@ -1,5 +1,5 @@
-import {AddCustomer} from './components/AddCustomer'
-import {CustomerList} from './components/CustomerList'
+import {AddCustomer} from '@/components/customer/AddCustomer'
+import {CustomerList} from '@/components/customer/CustomerList'
 import {getCustomersByCursor} from '@/actions/customer/getCustomersByCursor'
 
 const Customer = async () => {

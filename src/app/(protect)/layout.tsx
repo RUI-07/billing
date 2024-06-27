@@ -1,6 +1,6 @@
 import {cookieJwtCheck} from '@/util/cookieJwtCheck'
 import {redirect} from 'next/navigation'
-import {HomeTabbar} from './components/HomeTabbar'
+import {HomeTabbar} from '@/components/common/HomeTabbar'
 import Styles from './index.module.css'
 
 const isLogin = async () => {

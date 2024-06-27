@@ -3,7 +3,7 @@ import React from 'react'
 import {Button, Form, Input, Space, Typography} from 'react-vant'
 import styles from './page.module.css'
 import Link from 'next/link'
-import {register} from './register'
+import {register} from '@/actions/common/register'
 import {toastResult} from '@/util/toastResult'
 
 export const Register = () => {
