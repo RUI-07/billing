@@ -1,12 +1,16 @@
 import React, {useEffect, useState} from 'react'
-import {Popup, Cell, PopupProps} from 'react-vant'
+import {Popup, PopupProps} from 'react-vant'
 
 interface FullScreenPopupProps extends PopupProps {
   triggerHash: string
 }
 export const FullScreenPopup = (props: FullScreenPopupProps) => {
   const {triggerHash, style, children, ...other} = props
-  const [visible, setVisible] = useState(window.location.hash === triggerHash)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    setVisible(window.location.hash === triggerHash)
+  }, [])
 
   useEffect(() => {
     const handler = (e: HashChangeEvent) => {

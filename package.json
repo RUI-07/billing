@@ -17,7 +17,9 @@
     "@types/lodash": "^4.17.4",
     "@types/ramda": "^0.30.0",
     "ahooks": "^3.8.0",
+    "classnames": "^2.5.1",
     "dateformat": "^5.0.3",
+    "immer": "^10.1.1",
     "jose": "^5.4.0",
     "lodash": "^4.17.21",
     "next": "14.2.3",
@@ -30,6 +32,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-vant": "^3.3.5",
+    "use-immer": "^0.10.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

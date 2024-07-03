@@ -1,0 +1,40 @@
+.table {
+  width: 100%;
+  align-items: center;
+  border-collapse: collapse;
+  background: white;
+  color: var(--rv-cell-text-color);
+
+  & td,
+  & th {
+    border: 1px solid #ebebeb;
+    padding: 2px 4px;
+  }
+
+  & th {
+    white-space: nowrap;
+    background: rgba(0, 0, 0, 0.02);
+  }
+
+  .content {
+    min-height: 1.5em;
+  }
+
+  .remove {
+    text-align: center;
+    & svg {
+      vertical-align: middle;
+    }
+  }
+
+  .input {
+    width: 100%;
+    border: none;
+    outline: none;
+  }
+}
+
+.total {
+  font-size: 14px;
+  font-family: bold;
+}

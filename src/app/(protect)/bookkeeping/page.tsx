@@ -1,40 +1,64 @@
 'use client'
-import {CustomerList} from '@/components/customer/CustomerList'
-import {FullScreenPopup} from '@/components/ui/FullScreenPopup'
+import {BillTable, BillTableRecord, createBillTableRow} from '@/components/bookkeeping/BillTable'
+import {CustomerPicker} from '@/components/customer/CustomerPicker'
 import {Customer} from '@prisma/client'
-import {useState} from 'react'
-import {Calendar, Cell, Input} from 'react-vant'
+import {Button, DatetimePicker, Form, Input, Typography} from 'react-vant'
+import formatDate from 'dateformat'
+
+interface FormValues {
+  date: Date
+  customer: Customer
+  billItems: BillTableRecord[]
+  remark?: string
+}
 
 export default function Home() {
-  const [customer, setCustomer] = useState<Customer>()
   return (
-    <>
-      <div>
-        <Cell title="交易日期">
-          <Calendar defaultValue={new Date()} minDate={new Date(0)} maxDate={new Date()}>
-            {(val, actions) => (
-              <Cell
-                isLink
-                value={val ? (val as Date).toLocaleDateString() : '请选择日期'}
-                onClick={() => actions.open()}
-              />
-            )}
-          </Calendar>
-        </Cell>
-        <a href="#customer">
-          <Cell title="交易客户" value={customer?.name} />
-        </a>
+    <div>
+      <div style={{textAlign: 'center'}}>
+        <Typography.Title level={2}>新增账单</Typography.Title>
       </div>
-      <FullScreenPopup position="right" triggerHash="#customer">
-        <CustomerList
-          selectable
-          onSelect={item => {
-            window.location.hash = ''
-            console.log(item)
-            setCustomer(item)
+      <Form
+        initialValues={{
+          date: new Date(),
+          billItems: [createBillTableRow()],
+        }}
+        onFinish={(values: FormValues) => {
+          console.log(values)
+        }}
+        footer={
+          <div style={{margin: '16px 16px 0'}}>
+            <Button round nativeType="submit" type="primary" block>
+              提交
+            </Button>
+          </div>
+        }
+      >
+        <Form.Item
+          label="交易日期"
+          name="date"
+          isLink
+          trigger="onConfirm"
+          onClick={(_, action) => {
+            action?.current?.open()
           }}
-        />
-      </FullScreenPopup>
-    </>
+        >
+          <DatetimePicker popup type="date" minDate={new Date(0)} maxDate={new Date()}>
+            {(val: Date) => {
+              return val ? <Typography.Text>{formatDate(val, 'yyyy/mm/dd')}</Typography.Text> : '请选择日期'
+            }}
+          </DatetimePicker>
+        </Form.Item>
+        <Form.Item label="交易客户" name="customer" isLink>
+          <CustomerPicker placeholder="请选择客户" />
+        </Form.Item>
+        <Form.Item name="billItems">
+          <BillTable />
+        </Form.Item>
+        <Form.Item label="备注" name="remark">
+          <Input placeholder="请输入备注" />
+        </Form.Item>
+      </Form>
+    </div>
   )
 }
