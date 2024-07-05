@@ -4,6 +4,8 @@ import {CustomerPicker} from '@/components/customer/CustomerPicker'
 import {Customer} from '@prisma/client'
 import {Button, DatetimePicker, Form, Input, Typography} from 'react-vant'
 import formatDate from 'dateformat'
+import {createBill} from '@/actions/bill/createBill'
+import {toastResult} from '@/util/toastResult'
 
 interface FormValues {
   date: Date
@@ -23,8 +25,16 @@ export default function Home() {
           date: new Date(),
           billItems: [createBillTableRow()],
         }}
-        onFinish={(values: FormValues) => {
+        onFinish={async (values: FormValues) => {
           console.log(values)
+          const {date, billItems, remark} = values
+          const result = await createBill({
+            date,
+            customerId: values.customer.id,
+            billItems,
+            remark,
+          })
+          toastResult(result)
         }}
         footer={
           <div style={{margin: '16px 16px 0'}}>
