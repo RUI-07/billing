@@ -21,7 +21,7 @@ export const getCustomersByCursor = defineAction(async (userInfo, params: GetCus
   if (firstPage) {
     const firstCustomer = await prisma.customer.findFirst({
       where: {
-        user: userId,
+        userId: userId,
         isDeleted: false,
       },
       orderBy: {
@@ -44,7 +44,7 @@ export const getCustomersByCursor = defineAction(async (userInfo, params: GetCus
           name: {
             contains: keyword,
           },
-          user: userId,
+          userId: userId,
           isDeleted: false,
         },
         orderBy: {

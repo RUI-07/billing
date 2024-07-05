@@ -17,7 +17,7 @@ export const removeCustomer = defineAction(async (userInfo, params: RemoveCustom
     },
     where: {
       id,
-      user: +userInfo.id,
+      userId: +userInfo.id,
     },
   })
   if (result.count > 0) {

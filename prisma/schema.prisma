@@ -9,9 +9,10 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
+  provider     = "postgresql"
+  url          = env("POSTGRES_URL")
+  directUrl    = env("POSTGRES_URL_NON_POOLING")
+  relationMode = "prisma"
 }
 
 generator zod {
@@ -22,13 +23,15 @@ generator zod {
 }
 
 model User {
-  id        Int      @id @default(autoincrement()) @db.Integer
-  username  String   @unique @db.VarChar(64)
-  password  String   @db.Char(60)
-  createdAt DateTime @default(now()) @db.Timestamp(0)
-  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
+  id        Int        @id @default(autoincrement()) @db.Integer
+  username  String     @unique @db.VarChar(64)
+  password  String     @db.Char(60)
+  createdAt DateTime   @default(now()) @db.Timestamp(0)
+  updatedAt DateTime   @default(now()) @updatedAt @db.Timestamp(0)
+  customers Customer[]
+  bills     Bill[]
 
-  @@index([username])
+  @@index([username, password])
   @@index([createdAt])
   @@index([updatedAt])
   @@map("user")
@@ -40,35 +43,44 @@ model Customer {
   type         CustomerType
   statsStartAt DateTime     @db.Timestamp(0)
   phone        String?      @db.VarChar(64)
-  user         Int          @db.Integer
+  userId       Int          @db.Integer
+  user         User         @relation(fields: [userId], references: [id])
   isDeleted    Boolean      @default(false) @db.Boolean
   createdAt    DateTime     @default(now()) @db.Timestamp(0)
   updatedAt    DateTime     @default(now()) @updatedAt @db.Timestamp(0)
+  Bill         Bill[]
 
   @@index([name])
-  @@index([user])
-  @@index([user, name])
+  @@index([userId])
   @@index([createdAt])
   @@index([updatedAt])
   @@map("customer")
 }
 
 model Bill {
-  id        Int      @id @default(autoincrement()) @db.Integer
-  user      Int      @db.Integer
-  date      DateTime @db.Timestamp(0)
-  customer  Int      @db.Integer
-  isDeleted Boolean  @default(false) @db.Boolean
-  createdAt DateTime @default(now()) @db.Timestamp(0)
-  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
+  id         Int        @id @default(autoincrement()) @db.Integer
+  userId     Int        @db.Integer
+  user       User       @relation(fields: [userId], references: [id])
+  date       DateTime   @db.Timestamp(0)
+  customerId Int        @db.Integer
+  customer   Customer   @relation(fields: [customerId], references: [id])
+  isDeleted  Boolean    @default(false) @db.Boolean
+  createdAt  DateTime   @default(now()) @db.Timestamp(0)
+  updatedAt  DateTime   @default(now()) @updatedAt @db.Timestamp(0)
+  billItems  BillItem[]
+  remark     String?    @db.VarChar()
 
-  @@index([user])
+  @@index([userId])
+  @@index([customerId])
+  @@index([createdAt])
+  @@index([updatedAt])
   @@map("bill")
 }
 
 model BillItem {
   id        Int      @id @default(autoincrement()) @db.Integer
-  bill      Int      @db.Integer
+  billId    Int      @db.Integer
+  bill      Bill     @relation(fields: [billId], references: [id])
   name      String   @db.VarChar(64)
   quantity  Int      @db.Integer
   price     Int      @db.Integer
@@ -77,7 +89,9 @@ model BillItem {
   createdAt DateTime @default(now()) @db.Timestamp(0)
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
 
-  @@index([bill])
+  @@index([billId])
+  @@index([createdAt])
+  @@index([updatedAt])
   @@map("bill_item")
 }
 

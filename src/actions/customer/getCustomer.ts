@@ -7,7 +7,7 @@ export const getCustomer = async (id: number) => {
   const customer = await prisma.customer.findFirst({
     where: {
       id: +id,
-      user: +userInfo.id,
+      userId: +userInfo.id,
       isDeleted: false,
     },
   })

@@ -19,7 +19,7 @@ export const editCustomer = defineAction(async (userInfo, parmas: EditCustomerDt
   const result = await prisma.customer.updateMany({
     where: {
       id,
-      user: +userInfo.id,
+      userId: +userInfo.id,
     },
     data: values,
   })

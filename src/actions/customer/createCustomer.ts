@@ -23,7 +23,7 @@ export const createCustomer = defineAction(
       await prisma.customer.create({
         data: {
           ...customer,
-          user: parseInt(userInfo.id),
+          userId: parseInt(userInfo.id),
         },
       })
       return {
