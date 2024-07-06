@@ -8,6 +8,7 @@ export enum ResultCode {
   DATABASE_ERROR = 5002,
   BUSINESS_RULE_VIOLATED = 6000,
   UNKNOWN_ERROR = 9999,
+  NOT_FOUND = 404,
 }
 
 export type ActionResult<T extends Record<string, any> | undefined = undefined> = {

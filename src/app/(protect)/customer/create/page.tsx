@@ -7,7 +7,6 @@ interface CustomerCreateProps {
   }
 }
 const CustomerCreate = async (props: CustomerCreateProps) => {
-  console.log('CustomerCreate props', props)
   const {
     searchParams: {id},
   } = props
