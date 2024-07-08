@@ -20,3 +20,8 @@ export type ActionResult<T extends Record<string, any> | undefined = undefined> 
 export interface JwtUserInfo {
   id: string
 }
+
+type ItemOrUnknown<T> = T extends Array<infer U> ? U : unknown
+export type ListItemFromGen<T extends () => AsyncGenerator<Array<any>>> = ItemOrUnknown<
+  ReturnType<T> extends AsyncGenerator<infer U> ? U : unknown
+>

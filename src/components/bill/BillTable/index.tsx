@@ -39,11 +39,12 @@ export const createBillTableRow = (): BillTableRecord => {
 }
 
 export interface BillTableProps {
+  editable?: boolean
   value?: BillTableRecord[]
   onChange?: (value: BillTableRecord[]) => void
 }
 export const BillTable = (props: BillTableProps) => {
-  const {value = [], onChange} = props
+  const {value = [], onChange, editable} = props
 
   const handleChange = (setter: (draft: WritableDraft<BillTableRecord[]>) => void) => {
     onChange?.(produce(value, setter))
@@ -94,7 +95,7 @@ export const BillTable = (props: BillTableProps) => {
       default: {
         return (
           <div className={Styles.content}>
-            {
+            {editable ? (
               <input
                 className={Styles.input}
                 value={value}
@@ -104,19 +105,27 @@ export const BillTable = (props: BillTableProps) => {
                   })
                 }}
               />
-            }
+            ) : (
+              <span>{value}</span>
+            )}
           </div>
         )
       }
     }
   }
 
+  const finalColumns = editable
+    ? columns
+    : columns.filter(item => {
+        return !['remove'].includes(item.key)
+      })
+
   return (
     <Space direction="vertical" style={{width: '100%'}}>
       <table className={Styles.table}>
         <thead>
           <tr>
-            {columns.map(item => (
+            {finalColumns.map(item => (
               <th key={item.key}>{item.title}</th>
             ))}
           </tr>
@@ -125,7 +134,7 @@ export const BillTable = (props: BillTableProps) => {
           {value.map((item, index) => {
             return (
               <tr key={index}>
-                {columns.map(({key}) => {
+                {finalColumns.map(({key}) => {
                   return (
                     <td key={key}>
                       <div className={Styles.content}>

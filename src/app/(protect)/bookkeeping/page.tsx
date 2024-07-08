@@ -1,5 +1,5 @@
 import {getBill} from '@/actions/bill/getBill'
-import {BillCreateForm} from '@/components/bookkeeping/BillCreateForm'
+import {BillCreateForm} from '@/components/bill/BillCreateForm'
 import {ResultCode} from '@/type'
 import {fenToYuan} from '@/util/fenToYuan'
 

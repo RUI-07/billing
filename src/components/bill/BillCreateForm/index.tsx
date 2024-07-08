@@ -1,5 +1,5 @@
 'use client'
-import {BillTable, BillTableRecord, createBillTableRow} from '@/components/bookkeeping/BillTable'
+import {BillTable, BillTableRecord, createBillTableRow} from '@/components/bill/BillTable'
 import {CustomerPicker} from '@/components/customer/CustomerPicker'
 import {Customer} from '@prisma/client'
 import {Button, DatetimePicker, Form, Input, Typography} from 'react-vant'
@@ -33,7 +33,7 @@ export const BillCreateForm = (props: BillCreateFormProps) => {
     const {date, billItems, remark} = values
     const result = await createBill({
       date,
-      customerId: values.customer.id,
+      customerId: values.customer?.id,
       billItems,
       remark,
     })
@@ -75,7 +75,7 @@ export const BillCreateForm = (props: BillCreateFormProps) => {
           <CustomerPicker placeholder="请选择客户" />
         </Form.Item>
         <Form.Item name="billItems">
-          <BillTable />
+          <BillTable editable />
         </Form.Item>
         <Form.Item label="备注" name="remark">
           <Input placeholder="请输入备注" />
