@@ -1,4 +1,5 @@
 import {BillList} from '@/components/bill/BillList'
+import {castAsBillWithPayload} from '@/components/bill/BillList/castAsBillWithPayload'
 import {getBillsByCursor} from '@/actions/bill/getBillsByCursor'
 
 const Ledger = async () => {
@@ -7,7 +8,7 @@ const Ledger = async () => {
   })
   return (
     <div>
-      <BillList defaultList={customers.data?.list || []} />
+      <BillList defaultList={customers.data?.list.map(castAsBillWithPayload) || []} />
     </div>
   )
 }

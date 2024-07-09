@@ -1,51 +1,23 @@
 'use client'
-import {Bill, Prisma} from '@prisma/client'
-import {Dialog, List} from 'react-vant'
+import {DatetimePicker, Dialog, Form, FormInstance, Input, List, Typography} from 'react-vant'
 import {ActionSheetTrigger} from '@/components/ui/ActionSheetTrigger'
-import {ListItemFromGen, ResultCode} from '@/type'
-import {toastResult} from '@/util/toastResult'
+import {ListItemFromGen} from '@/type'
 import {useListGenerator} from '@/hooks/useListGenerator'
 import Styles from './index.module.css'
 import {useRouter} from 'next/navigation'
 import {removeCustomer} from '@/actions/customer/removeCustomer'
-import {getBillsByCursor} from '@/actions/bill/getBillsByCursor'
 import formatDate from 'dateformat'
 import {BillTable} from '../BillTable'
-import {fenToYuan} from '@/util/fenToYuan'
-import {pick} from 'lodash'
+import {debounce, pick} from 'lodash'
+import {billsGen} from './billsGen'
+import {CustomerPicker} from '@/components/customer/CustomerPicker'
+import {useRef, useState} from 'react'
+import {Customer} from '@prisma/client'
 
-async function* billsGen(defaultIndex?: number) {
-  const size = 5
-  let hasMore = true
-  let nextId = defaultIndex
-  while (hasMore) {
-    const res = await getBillsByCursor({
-      size,
-      index: nextId,
-    })
-    if (res.code !== ResultCode.SUCCESS) {
-      toastResult(res)
-      hasMore = false
-      return
-    } else {
-      const list = res.data?.list || []
-      hasMore = list.length >= size
-      yield list.map(item => {
-        return {
-          ...item,
-          billItems: item.billItems.map(item => {
-            return {
-              ...item,
-              quantity: item.quantity + '',
-              price: fenToYuan(item.price),
-            }
-          }),
-        }
-      })
-      nextId = res.data?.nextId
-      if (!nextId) return
-    }
-  }
+interface BillListSearchFormValues {
+  date?: Date
+  customer?: Customer
+  remark?: string
 }
 
 type BillWithPayload = ListItemFromGen<typeof billsGen>
@@ -60,15 +32,29 @@ export const BillList = (props: CustomerListProps) => {
   const router = useRouter()
 
   const defaultIndex = defaultList.findLast(() => true)?.id
-  const {list, reload, done, loadMore} = useListGenerator(billsGen, [defaultIndex], {
+  const {
+    list,
+    reload: reloadRaw,
+    done,
+    loadMore,
+  } = useListGenerator(billsGen, [defaultIndex], {
     defaultList,
   })
+
+  const formRef = useRef<FormInstance>(null)
+  const reload = () => {
+    const searchOptions: BillListSearchFormValues = formRef.current?.getFieldsValue()
+    reloadRaw(undefined, {
+      date: searchOptions.date,
+      customerId: searchOptions.customer?.id,
+      remark: searchOptions.remark || undefined,
+    })
+  }
 
   const handleDelete = (id: number) => {
     Dialog.confirm({
       title: '确认删除？',
       onConfirm: async () => {
-        console.log('delete')
         await removeCustomer({
           id,
         })
@@ -79,6 +65,29 @@ export const BillList = (props: CustomerListProps) => {
 
   return (
     <div className={Styles.listWrap}>
+      <Form ref={formRef} onValuesChange={debounce(reload, 600)}>
+        <Form.Item
+          label="交易日期"
+          name="date"
+          isLink
+          trigger="onConfirm"
+          onClick={(_, action) => {
+            action?.current?.open()
+          }}
+        >
+          <DatetimePicker popup type="date" minDate={new Date(0)} maxDate={new Date()}>
+            {(val: Date) => {
+              return val ? <Typography.Text>{formatDate(val, 'yyyy/mm/dd')}</Typography.Text> : '请选择日期'
+            }}
+          </DatetimePicker>
+        </Form.Item>
+        <Form.Item label="交易客户" name="customer" isLink>
+          <CustomerPicker placeholder="请选择客户" />
+        </Form.Item>
+        <Form.Item label="备注" name="remark">
+          <Input placeholder="请输入备注" />
+        </Form.Item>
+      </Form>
       <List
         className={Styles.list}
         onLoad={async () => {

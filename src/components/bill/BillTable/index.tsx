@@ -149,14 +149,18 @@ export const BillTable = (props: BillTableProps) => {
         </tbody>
       </table>
       <Flex justify="between" align="center">
-        <Space>
-          <Button size="small" type="primary" onClick={handleAddRow}>
-            添加
-          </Button>
-          <Button size="small" type="danger" onClick={handleEmptyTable}>
-            清空
-          </Button>
-        </Space>
+        {editable ? (
+          <Space>
+            <Button size="small" type="primary" onClick={handleAddRow}>
+              添加
+            </Button>
+            <Button size="small" type="danger" onClick={handleEmptyTable}>
+              清空
+            </Button>
+          </Space>
+        ) : (
+          <span />
+        )}
         <span className={Styles.total}>¥{value.map(item => +item.price * +item.quantity).reduce(add, 0)}</span>
       </Flex>
     </Space>
