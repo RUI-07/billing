@@ -1,18 +1,19 @@
 'use client'
 import {DatetimePicker, Dialog, Form, FormInstance, Input, List, Typography} from 'react-vant'
 import {ActionSheetTrigger} from '@/components/ui/ActionSheetTrigger'
-import {ListItemFromGen} from '@/type'
+import {ListItemFromGen, ResultCode} from '@/type'
 import {useListGenerator} from '@/hooks/useListGenerator'
 import Styles from './index.module.css'
 import {useRouter} from 'next/navigation'
-import {removeCustomer} from '@/actions/customer/removeCustomer'
 import formatDate from 'dateformat'
 import {BillTable} from '../BillTable'
 import {debounce, pick} from 'lodash'
 import {billsGen} from './billsGen'
 import {CustomerPicker} from '@/components/customer/CustomerPicker'
-import {useRef, useState} from 'react'
+import {useRef} from 'react'
 import {Customer} from '@prisma/client'
+import {removeBill} from '@/actions/bill/removeBill'
+import {toastResult} from '@/util/toastResult'
 
 interface BillListSearchFormValues {
   date?: Date
@@ -55,10 +56,14 @@ export const BillList = (props: CustomerListProps) => {
     Dialog.confirm({
       title: '确认删除？',
       onConfirm: async () => {
-        await removeCustomer({
+        const result = await removeBill({
           id,
         })
-        reload()
+        if (result.code !== ResultCode.SUCCESS) {
+          toastResult(result)
+        } else {
+          reload()
+        }
       },
     })
   }
