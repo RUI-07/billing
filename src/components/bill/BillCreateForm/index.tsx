@@ -6,10 +6,11 @@ import {Button, DatetimePicker, Form, Input, Typography} from 'react-vant'
 import formatDate from 'dateformat'
 import {createBill} from '@/actions/bill/createBill'
 import {toastResult} from '@/util/toastResult'
+import {ActionSheetTrigger} from '@/components/ui/ActionSheetTrigger'
 
 interface FormValues {
   date: Date
-  customer: Customer
+  customer?: Customer
   billItems: BillTableRecord[]
   remark?: string
 }
@@ -30,32 +31,46 @@ export const BillCreateForm = (props: BillCreateFormProps) => {
   const isEdit = !!editId
 
   const handleCreate = async (values: FormValues) => {
-    const {date, billItems, remark} = values
+    const {date, billItems, remark, customer} = values
+    if (!customer) return
     const result = await createBill({
       date,
-      customerId: values.customer?.id,
+      customerId: customer?.id,
       billItems,
       remark,
     })
     toastResult(result)
   }
 
+  const Footer = (
+    <Form.Subscribe to={['customer']}>
+      {({customer}) => {
+        const notSubmit = !customer
+        return (
+          <div style={{margin: '16px 16px 0'}}>
+            {notSubmit ? (
+              <ActionSheetTrigger actions={[{name: '发图片'}, {name: '发文字'}]}>
+                <Button round type="primary" block>
+                  发单
+                </Button>
+              </ActionSheetTrigger>
+            ) : (
+              <Button round nativeType="submit" type="primary" block>
+                {notSubmit ? '发单' : '提交'}
+              </Button>
+            )}
+          </div>
+        )
+      }}
+    </Form.Subscribe>
+  )
+
   return (
     <div>
       <div style={{textAlign: 'center'}}>
         <Typography.Title level={2}>{isEdit ? '编辑账单' : '新增账单'}</Typography.Title>
       </div>
-      <Form
-        initialValues={initialValues}
-        onFinish={handleCreate}
-        footer={
-          <div style={{margin: '16px 16px 0'}}>
-            <Button round nativeType="submit" type="primary" block>
-              提交
-            </Button>
-          </div>
-        }
-      >
+      <Form initialValues={initialValues} onFinish={handleCreate} footer={Footer}>
         <Form.Item
           label="交易日期"
           name="date"
