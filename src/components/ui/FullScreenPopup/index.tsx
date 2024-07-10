@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {Popup, PopupProps} from 'react-vant'
 
-interface FullScreenPopupProps extends PopupProps {
+export interface FullScreenPopupProps extends PopupProps {
   triggerHash: string
 }
 export const FullScreenPopup = (props: FullScreenPopupProps) => {

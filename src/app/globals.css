@@ -17,3 +17,7 @@ a {
 * {
   box-sizing: border-box;
 }
+
+:root {
+  --page-background: #f6f7fb;
+}

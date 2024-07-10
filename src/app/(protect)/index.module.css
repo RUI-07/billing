@@ -1,6 +1,6 @@
 .page-wrap {
   height: 100%;
   padding-bottom: 52px;
-  background: #f6f7fb;
+  background: var(--page-background);
   overflow-y: auto;
 }

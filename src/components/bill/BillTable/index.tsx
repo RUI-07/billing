@@ -161,7 +161,9 @@ export const BillTable = (props: BillTableProps) => {
         ) : (
           <span />
         )}
-        <span className={Styles.total}>¥{value.map(item => +item.price * +item.quantity).reduce(add, 0)}</span>
+        <span className={Styles.total}>
+          ¥{value.map(item => parseFloat(item.price) * parseFloat(item.quantity)).reduce(add, 0) || 0}
+        </span>
       </Flex>
     </Space>
   )
