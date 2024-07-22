@@ -1,24 +1,26 @@
+import {useEffectEvent} from '@/hooks/useEffectEvent'
 import React, {useEffect, useState} from 'react'
 import {Popup, PopupProps} from 'react-vant'
 
-export interface FullScreenPopupProps extends PopupProps {
+export interface FullScreenPopupProps extends Omit<PopupProps, 'visible'> {
   triggerHash: string
+  onVisibleWillChange?: (visible: boolean) => void
 }
 export const FullScreenPopup = (props: FullScreenPopupProps) => {
-  const {triggerHash, style, children, ...other} = props
+  const {triggerHash, style, children, onVisibleWillChange, ...other} = props
   const [visible, setVisible] = useState(false)
 
-  useEffect(() => {
-    setVisible(window.location.hash === triggerHash)
-  }, [])
+  const handler = useEffectEvent(() => {
+    const val = window.location.hash === triggerHash
+    onVisibleWillChange?.(val)
+    setVisible(val)
+  })
 
   useEffect(() => {
-    const handler = (e: HashChangeEvent) => {
-      setVisible(window.location.hash === triggerHash)
-    }
+    handler()
     window.addEventListener('hashchange', handler)
     return () => window.removeEventListener('hashchange', handler)
-  }, [triggerHash])
+  }, [handler])
 
   return (
     <Popup {...other} visible={visible} style={{...style, width: '100%', height: '100%'}}>
