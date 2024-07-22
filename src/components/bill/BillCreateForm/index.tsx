@@ -9,6 +9,8 @@ import {toastResult} from '@/util/toastResult'
 import {ActionSheetTrigger} from '@/components/ui/ActionSheetTrigger'
 import {BillTextEditPopup} from '../BillTextEditPopup'
 import {useBillTextEdit} from '../BillTextEditPopup/useBillTextEdit'
+import {BillImagePopup} from '../BillImagePopup'
+import {useImagePopup} from '../BillImagePopup/useImagePopup'
 
 interface FormValues {
   date: Date
@@ -45,6 +47,7 @@ export const BillCreateForm = (props: BillCreateFormProps) => {
   }
 
   const {editBillText, props: textEditProps} = useBillTextEdit()
+  const {showBillImage, props: showImageProps} = useImagePopup()
 
   const Footer = (
     <Form.Item noStyle shouldUpdate>
@@ -63,6 +66,7 @@ export const BillCreateForm = (props: BillCreateFormProps) => {
                       break
                     }
                     case '发图片': {
+                      showBillImage(date, billItems)
                       break
                     }
                   }
@@ -117,6 +121,7 @@ export const BillCreateForm = (props: BillCreateFormProps) => {
         </Form>
       </div>
       <BillTextEditPopup {...textEditProps} />
+      <BillImagePopup {...showImageProps} />
     </>
   )
 }

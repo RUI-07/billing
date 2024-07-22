@@ -1,0 +1,31 @@
+.wrap {
+  font-size: 18px;
+  padding: 16px;
+  background: white;
+}
+
+.date {
+  color: var(--rv-primary-color);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.items {
+  padding: 8px;
+  border-top: 1px solid var(--rv-cell-text-color);
+  border-bottom: 1px solid var(--rv-cell-text-color);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  .total {
+    color: var(--rv-red);
+    min-width: 100px;
+  }
+}
+
+.button-wrap {
+  margin: 16px;
+}
