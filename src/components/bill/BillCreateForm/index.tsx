@@ -7,12 +7,8 @@ import formatDate from 'dateformat'
 import {createBill} from '@/actions/bill/createBill'
 import {toastResult} from '@/util/toastResult'
 import {ActionSheetTrigger} from '@/components/ui/ActionSheetTrigger'
-import {FullScreenPopup} from '@/components/ui/FullScreenPopup'
 import {BillTextEditPopup} from '../BillTextEditPopup'
-import {useState} from 'react'
-import {add} from 'lodash'
-
-const TEXT_EDIT_HASH = '#bill-text'
+import {useBillTextEdit} from '../BillTextEditPopup/useBillTextEdit'
 
 interface FormValues {
   date: Date
@@ -48,7 +44,8 @@ export const BillCreateForm = (props: BillCreateFormProps) => {
     toastResult(result)
   }
 
-  const [billText, setBillText] = useState('')
+  const {editBillText, props: textEditProps} = useBillTextEdit()
+
   const Footer = (
     <Form.Item noStyle shouldUpdate>
       {form => {
@@ -62,27 +59,10 @@ export const BillCreateForm = (props: BillCreateFormProps) => {
                 onSelect={action => {
                   switch (action.name) {
                     case '发文字': {
-                      setBillText(
-                        [
-                          formatDate(date, 'yyyy年mm月dd日'),
-                          '',
-                          '----------',
-                          '',
-                          billItems
-                            ?.map(item => {
-                              return `${item.name}：${parseFloat(item.price) * parseFloat(item.quantity)}`
-                            })
-                            .join('\n'),
-                          '',
-                          '----------',
-                          '',
-                          `共${
-                            billItems.map(item => parseFloat(item.price) * parseFloat(item.quantity)).reduce(add, 0) ||
-                            0
-                          }元`,
-                        ].join('\n'),
-                      )
-                      window.location.hash = TEXT_EDIT_HASH
+                      editBillText(date, billItems)
+                      break
+                    }
+                    case '发图片': {
                       break
                     }
                   }
@@ -136,7 +116,7 @@ export const BillCreateForm = (props: BillCreateFormProps) => {
           </Form.Item>
         </Form>
       </div>
-      <BillTextEditPopup initialValue={billText} triggerHash={TEXT_EDIT_HASH} />
+      <BillTextEditPopup {...textEditProps} />
     </>
   )
 }

@@ -9,32 +9,36 @@ interface BillTextEditPopupProps extends FullScreenPopupProps {
   onChange?: (value: string) => void
 }
 export const BillTextEditPopup = (props: BillTextEditPopupProps) => {
-  const {initialValue, onChange, visible, ...others} = props
+  const {initialValue, onChange, ...others} = props
   const [value, setValue] = useState(initialValue)
 
-  if (!visible && value !== initialValue) {
-    setValue(initialValue)
+  const handleVisibleChange = (visible: boolean) => {
+    if (visible && value !== initialValue) {
+      setValue(initialValue)
+    }
+  }
+
+  const handleChange = (val: string) => {
+    setValue(val)
+    onChange?.(val)
+  }
+
+  const handleCopy = () => {
+    copy(value || '')
+    Toast.info('复制成功')
   }
 
   return (
-    <FullScreenPopup {...others} visible={visible} position="right">
+    <FullScreenPopup {...others} position="right" onVisibleWillChange={handleVisibleChange}>
       <div className={Styles.content}>
         <div style={{textAlign: 'center'}}>
           <Typography.Title level={2}>信息内容</Typography.Title>
         </div>
         <div className={Styles['textarea-wrap']}>
-          <Input.TextArea value={value} onChange={onChange} autoSize={{minHeight: 300}} />
+          <Input.TextArea value={value} onChange={handleChange} autoSize={{minHeight: 300}} />
         </div>
         <div className={Styles.footer}>
-          <Button
-            type="primary"
-            block
-            round
-            onClick={() => {
-              copy(value || '')
-              Toast.info('复制成功')
-            }}
-          >
+          <Button type="primary" block round onClick={handleCopy}>
             复制
           </Button>
         </div>
