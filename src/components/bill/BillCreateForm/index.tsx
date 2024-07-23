@@ -6,11 +6,7 @@ import {Button, DatetimePicker, Form, Input, Typography} from 'react-vant'
 import formatDate from 'dateformat'
 import {createBill} from '@/actions/bill/createBill'
 import {toastResult} from '@/util/toastResult'
-import {ActionSheetTrigger} from '@/components/ui/ActionSheetTrigger'
-import {BillTextEditPopup} from '../BillTextEditPopup'
-import {useBillTextEdit} from '../BillTextEditPopup/useBillTextEdit'
-import {BillImagePopup} from '../BillImagePopup'
-import {useImagePopup} from '../BillImagePopup/useImagePopup'
+import {BillShareTrigger} from '../BillShareTrigger'
 
 interface FormValues {
   date: Date
@@ -46,9 +42,6 @@ export const BillCreateForm = (props: BillCreateFormProps) => {
     toastResult(result)
   }
 
-  const {editBillText, props: textEditProps} = useBillTextEdit()
-  const {showBillImage, props: showImageProps} = useImagePopup()
-
   const Footer = (
     <Form.Item noStyle shouldUpdate>
       {form => {
@@ -57,28 +50,14 @@ export const BillCreateForm = (props: BillCreateFormProps) => {
         return (
           <div style={{margin: '16px 16px 0'}}>
             {notSubmit ? (
-              <ActionSheetTrigger
-                actions={[{name: '发图片'}, {name: '发文字'}]}
-                onSelect={action => {
-                  switch (action.name) {
-                    case '发文字': {
-                      editBillText(date, billItems)
-                      break
-                    }
-                    case '发图片': {
-                      showBillImage(date, billItems)
-                      break
-                    }
-                  }
-                }}
-              >
+              <BillShareTrigger date={date} billItems={billItems}>
                 <Button round type="primary" block>
                   发单
                 </Button>
-              </ActionSheetTrigger>
+              </BillShareTrigger>
             ) : (
               <Button round nativeType="submit" type="primary" block>
-                {notSubmit ? '发单' : '提交'}
+                提交
               </Button>
             )}
           </div>
@@ -120,8 +99,6 @@ export const BillCreateForm = (props: BillCreateFormProps) => {
           </Form.Item>
         </Form>
       </div>
-      <BillTextEditPopup {...textEditProps} />
-      <BillImagePopup {...showImageProps} />
     </>
   )
 }

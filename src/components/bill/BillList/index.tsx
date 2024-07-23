@@ -14,6 +14,7 @@ import {useRef} from 'react'
 import {Customer} from '@prisma/client'
 import {removeBill} from '@/actions/bill/removeBill'
 import {toastResult} from '@/util/toastResult'
+import {BillShareTrigger} from '../BillShareTrigger'
 
 interface BillListSearchFormValues {
   date?: Date
@@ -143,7 +144,9 @@ export const BillList = (props: CustomerListProps) => {
                   >
                     <span>更多</span>
                   </ActionSheetTrigger>
-                  <span>详情</span>
+                  <BillShareTrigger date={item.date} billItems={item.billItems}>
+                    <span>发单</span>
+                  </BillShareTrigger>
                 </div>
               )}
             </div>
