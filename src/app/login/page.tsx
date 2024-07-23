@@ -6,7 +6,7 @@ import Link from 'next/link'
 import {login} from '@/actions/common/login'
 import {toastResult} from '@/util/toastResult'
 
-export const Login = () => {
+const Login = () => {
   return (
     <div className={styles.login}>
       <div className={styles.title}>

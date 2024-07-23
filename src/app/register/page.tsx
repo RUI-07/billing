@@ -6,7 +6,7 @@ import Link from 'next/link'
 import {register} from '@/actions/common/register'
 import {toastResult} from '@/util/toastResult'
 
-export const Register = () => {
+const Register = () => {
   return (
     <div className={styles.register}>
       <div className={styles.title}>
