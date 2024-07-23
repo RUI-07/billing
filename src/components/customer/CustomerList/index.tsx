@@ -12,6 +12,7 @@ import {debounce} from 'lodash'
 import Styles from './index.module.css'
 import {useRouter} from 'next/navigation'
 import {removeCustomer} from '@/actions/customer/removeCustomer'
+import Link from 'next/link'
 
 async function* customersGen(defaultIndex?: number, keyword?: string) {
   const size = 5
@@ -132,7 +133,7 @@ export const CustomerList = (props: CustomerListProps) => {
                   >
                     <span>更多</span>
                   </ActionSheetTrigger>
-                  <span>账本</span>
+                  <Link href={`/ledger?customerId=${item.id}`}>账本</Link>
                 </div>
               )}
             </div>

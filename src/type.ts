@@ -25,3 +25,11 @@ type ItemOrUnknown<T> = T extends Array<infer U> ? U : unknown
 export type ListItemFromGen<T extends () => AsyncGenerator<Array<any>>> = ItemOrUnknown<
   ReturnType<T> extends AsyncGenerator<infer U> ? U : unknown
 >
+
+export interface BasePageProps<
+  S extends Record<string, any> = Record<string, any>,
+  P extends Record<string, any> = Record<string, any>,
+> {
+  searchParams: Partial<S>
+  params: P
+}

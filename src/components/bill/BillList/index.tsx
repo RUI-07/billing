@@ -26,11 +26,16 @@ type BillWithPayload = ListItemFromGen<typeof billsGen>
 
 interface CustomerListProps {
   defaultList?: BillWithPayload[]
+  defaultQuerys?: {
+    date?: Date
+    customerId?: number
+    remark?: string
+  }
   selectable?: boolean
   onSelect?: (item: BillWithPayload) => void
 }
 export const BillList = (props: CustomerListProps) => {
-  const {defaultList = [], selectable, onSelect} = props
+  const {defaultList = [], defaultQuerys, selectable, onSelect} = props
   const router = useRouter()
 
   const defaultIndex = defaultList.findLast(() => true)?.id
@@ -39,7 +44,7 @@ export const BillList = (props: CustomerListProps) => {
     reload: reloadRaw,
     done,
     loadMore,
-  } = useListGenerator(billsGen, [defaultIndex], {
+  } = useListGenerator(billsGen, [defaultIndex, defaultQuerys], {
     defaultList,
   })
 
@@ -71,7 +76,7 @@ export const BillList = (props: CustomerListProps) => {
 
   return (
     <div className={Styles.listWrap}>
-      <Form ref={formRef} onValuesChange={debounce(reload, 600)}>
+      <Form ref={formRef} onValuesChange={debounce(reload, 600)} initialValues={defaultQuerys}>
         <Form.Item
           label="交易日期"
           name="date"
