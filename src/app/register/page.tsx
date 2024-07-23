@@ -5,8 +5,13 @@ import styles from './page.module.css'
 import Link from 'next/link'
 import {register} from '@/actions/common/register'
 import {toastResult} from '@/util/toastResult'
+import {useRouter} from 'next/navigation'
+
+const LOGIN_PAGE = '/login'
 
 const Register = () => {
+  const router = useRouter()
+
   return (
     <div className={styles.register}>
       <div className={styles.title}>
@@ -17,13 +22,14 @@ const Register = () => {
         onFinish={async values => {
           const result = await register(values)
           toastResult(result)
+          router.replace(LOGIN_PAGE)
         }}
         footer={
           <Space className={styles.buttons} direction="vertical">
             <Button block type="primary" nativeType="submit">
               确定
             </Button>
-            <Link href="/login">
+            <Link href={LOGIN_PAGE}>
               <Button block>登入</Button>
             </Link>
           </Space>
