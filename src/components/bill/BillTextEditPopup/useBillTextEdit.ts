@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import formatDate from 'dateformat'
-import {BillTableRecord} from '../BillTable'
 import {add} from 'lodash'
 
 const TEXT_EDIT_HASH = '#bill-text'
@@ -9,7 +8,14 @@ export const useBillTextEdit = () => {
   const [billText, setBillText] = useState('')
 
   return {
-    editBillText: (date: Date, billItems: BillTableRecord[]) => {
+    editBillText: (
+      date: Date,
+      billItems: {
+        name: string
+        quantity: string
+        price: string
+      }[],
+    ) => {
       setBillText(
         [
           formatDate(date, 'yyyy年mm月dd日'),

@@ -2,14 +2,17 @@ import {ActionSheetTrigger} from '@/components/ui/ActionSheetTrigger'
 import {ActionSheetProps} from 'react-vant'
 import {useBillTextEdit} from '../BillTextEditPopup/useBillTextEdit'
 import {useImagePopup} from '../BillImagePopup/useImagePopup'
-import {BillTableRecord} from '../BillTable'
 import {BillTextEditPopup} from '../BillTextEditPopup'
 import {BillImagePopup} from '../BillImagePopup'
 import {ReactElement} from 'react'
 
 interface BillShareTriggerProps {
   date: Date
-  billItems: BillTableRecord[]
+  billItems: {
+    name: string
+    quantity: string
+    price: string
+  }[]
   children: ReactElement
 }
 export const BillShareTrigger = (props: BillShareTriggerProps) => {

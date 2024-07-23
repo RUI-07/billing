@@ -1,5 +1,4 @@
 import {FullScreenPopup, FullScreenPopupProps} from '@/components/ui/FullScreenPopup'
-import {BillTableRecord} from '../BillTable'
 import formatDate from 'dateformat'
 import {add} from 'lodash'
 import Styles from './index.module.css'
@@ -17,7 +16,11 @@ export const saveImage = (canvas: HTMLCanvasElement, fileName: string) => {
 
 interface BillImagePopupProps extends FullScreenPopupProps {
   date?: Date
-  billItems?: BillTableRecord[]
+  billItems?: {
+    name: string
+    quantity: string
+    price: string
+  }[]
 }
 export const BillImagePopup = (props: BillImagePopupProps) => {
   const {date, billItems, ...others} = props
