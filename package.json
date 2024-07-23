@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "prisma generate && next dev -p 4000",
-    "build": "prisma generate && prisma db push && next build",
-    "start": "next start",
+    "build": "next lint && prisma generate && next build",
+    "start": "next start -p 4000",
     "lint": "next lint",
     "migrate:dev": "dotenv -c -- prisma migrate dev",
-    "migrate:prod": "dotenv -c -- prisma migrate deploy"
+    "migrate:prod": "dotenv -c -- prisma migrate deploy",
+    "db:push": "dotenv -c -- prisma db push"
   },
   "dependencies": {
     "@prisma/client": "5.14.0",
