@@ -1,14 +1,17 @@
 'use client'
 import {CashOnDeliver, ChartTrendingO, FriendsO, Records, UserCircleO} from '@react-vant/icons'
-import {useRouter} from 'next/navigation'
+import {usePathname, useRouter} from 'next/navigation'
 import {Tabbar, TabbarProps} from 'react-vant'
 
 export const HomeTabbarClient = (props: TabbarProps) => {
   const router = useRouter()
+  const pathname = usePathname()
+  const firstPath = pathname.split('/').slice(1)[0]
 
   return (
     <Tabbar
       {...props}
+      value={firstPath}
       onChange={v => {
         v && router.push('/' + v)
       }}
