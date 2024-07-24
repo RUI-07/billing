@@ -28,7 +28,7 @@ interface CustomerListProps {
   defaultList?: BillWithPayload[]
   defaultQuerys?: {
     date?: Date
-    customerId?: number
+    customer?: Customer
     remark?: string
   }
   selectable?: boolean
@@ -39,12 +39,13 @@ export const BillList = (props: CustomerListProps) => {
   const router = useRouter()
 
   const defaultIndex = defaultList.findLast(() => true)?.id
+  const defaultSearchOptions =  defaultQuerys ? {...defaultQuerys, customerId: defaultQuerys.customer?.id} : undefined
   const {
     list,
     reload: reloadRaw,
     done,
     loadMore,
-  } = useListGenerator(billsGen, [defaultIndex, defaultQuerys], {
+  } = useListGenerator(billsGen, [defaultIndex, defaultSearchOptions], {
     defaultList,
   })
 
