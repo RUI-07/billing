@@ -1,0 +1,15 @@
+.flexWrap {
+  width: 100%;
+  display: flex;
+
+  .link {
+    flex: 1 1;
+  }
+
+  .cancel {
+    font-size: 15px;
+    & > svg {
+      vertical-align: text-bottom;
+    }
+  }
+}
