@@ -2,7 +2,7 @@ import {FullScreenPopup, FullScreenPopupProps} from '@/components/ui/FullScreenP
 import formatDate from 'dateformat'
 import {add} from 'lodash'
 import Styles from './index.module.css'
-import {Button} from 'react-vant'
+import {Button, Typography} from 'react-vant'
 import html2canvas from 'html2canvas'
 import {saveAs} from 'file-saver'
 
@@ -39,6 +39,9 @@ export const BillImagePopup = (props: BillImagePopupProps) => {
       position="right"
     >
       <div>
+        <div style={{textAlign: 'center'}}>
+          <Typography.Title level={2}>图片内容</Typography.Title>
+        </div>
         <div className={Styles.wrap}>
           <div className={Styles.date}>{formatDate(date, 'yyyy-mm-dd')}</div>
           <div className={Styles.items}>
