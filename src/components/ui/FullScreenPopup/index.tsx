@@ -23,7 +23,11 @@ export const FullScreenPopup = (props: FullScreenPopupProps) => {
   }, [handler])
 
   return (
-    <Popup {...other} visible={visible} style={{...style, width: '100%', height: '100%'}}>
+    <Popup
+      {...other}
+      visible={visible}
+      style={{...style, width: '100%', height: '100%', background: 'var(--page-background)'}}
+    >
       {children}
     </Popup>
   )
