@@ -100,6 +100,7 @@ export const BillTable = (props: BillTableProps) => {
                 className={Styles.input}
                 value={value}
                 type={['price', 'quantity'].includes(key) ? 'number' : undefined}
+                enterKeyHint={key !== 'price' ? 'next' : 'done'}
                 onChange={e => {
                   handleChange(draft => {
                     draft[rowIndex][key] = e.target.value as BillTableRecord[T]
