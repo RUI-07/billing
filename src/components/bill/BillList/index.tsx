@@ -39,7 +39,7 @@ export const BillList = (props: CustomerListProps) => {
   const router = useRouter()
 
   const defaultIndex = defaultList.findLast(() => true)?.id
-  const defaultSearchOptions =  defaultQuerys ? {...defaultQuerys, customerId: defaultQuerys.customer?.id} : undefined
+  const defaultSearchOptions = defaultQuerys ? {...defaultQuerys, customerId: defaultQuerys.customer?.id} : undefined
   const {
     list,
     reload: reloadRaw,
@@ -150,7 +150,7 @@ export const BillList = (props: CustomerListProps) => {
                   >
                     <span>更多</span>
                   </ActionSheetTrigger>
-                  <BillShareTrigger date={item.date} billItems={item.billItems}>
+                  <BillShareTrigger date={item.date} billItems={item.billItems} remark={item.remark || undefined}>
                     <span>发单</span>
                   </BillShareTrigger>
                 </div>

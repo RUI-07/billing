@@ -45,12 +45,12 @@ export const BillCreateForm = (props: BillCreateFormProps) => {
   const Footer = (
     <Form.Item noStyle shouldUpdate>
       {form => {
-        const {customer, date, billItems} = form.getFieldsValue() as FormValues
+        const {customer, date, billItems, remark} = form.getFieldsValue() as FormValues
         const notSubmit = !customer
         return (
           <div style={{margin: '16px 16px 0'}}>
             {notSubmit ? (
-              <BillShareTrigger date={date} billItems={billItems}>
+              <BillShareTrigger date={date} billItems={billItems} remark={remark}>
                 <Button round type="primary" block>
                   发单
                 </Button>

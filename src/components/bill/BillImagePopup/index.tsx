@@ -21,9 +21,10 @@ interface BillImagePopupProps extends FullScreenPopupProps {
     quantity: string
     price: string
   }[]
+  remark?: string
 }
 export const BillImagePopup = (props: BillImagePopupProps) => {
-  const {date, billItems, ...others} = props
+  const {date, billItems, remark, ...others} = props
 
   const handleSaveImage = async () => {
     const canvas = await html2canvas(document.querySelector(`.${Styles.wrap}`)!)
@@ -59,6 +60,7 @@ export const BillImagePopup = (props: BillImagePopupProps) => {
               })}
           </div>
           <div className={Styles.footer}>
+            {remark ? <div className={Styles.remark}>备注：{remark}</div> : null}
             <div className={Styles.total}>
               ¥{billItems?.map(item => parseFloat(item.price) * parseFloat(item.quantity)).reduce(add, 0) || 0}
             </div>

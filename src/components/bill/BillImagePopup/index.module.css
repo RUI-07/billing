@@ -18,11 +18,18 @@
 
 .footer {
   display: flex;
-  justify-content: flex-end;
   margin-top: 16px;
+  align-items: baseline;
+
   .total {
     color: var(--rv-red);
     min-width: 100px;
+    margin-left: auto;
+  }
+
+  .remark {
+    font-size: 14px;
+    margin-right: 4px;
   }
 }
 

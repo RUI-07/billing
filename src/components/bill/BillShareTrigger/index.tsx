@@ -13,21 +13,23 @@ interface BillShareTriggerProps {
     quantity: string
     price: string
   }[]
+  remark?: string
   children: ReactElement
 }
 export const BillShareTrigger = (props: BillShareTriggerProps) => {
-  const {date, billItems, children} = props
+  const {date, billItems, remark, children} = props
   const {editBillText, props: textEditProps} = useBillTextEdit()
   const {showBillImage, props: showImageProps} = useImagePopup()
 
   const handleAction: ActionSheetProps['onSelect'] = action => {
+    const record = {date, billItems, remark}
     switch (action.name) {
       case '发文字': {
-        editBillText(date, billItems)
+        editBillText(record)
         break
       }
       case '发图片': {
-        showBillImage(date, billItems)
+        showBillImage(record)
         break
       }
     }
