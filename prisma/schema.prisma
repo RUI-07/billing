@@ -23,13 +23,14 @@ generator zod {
 }
 
 model User {
-  id        Int        @id @default(autoincrement()) @db.Integer
-  username  String     @unique @db.VarChar(64)
-  password  String     @db.Char(60)
-  createdAt DateTime   @default(now()) @db.Timestamp(0)
-  updatedAt DateTime   @default(now()) @updatedAt @db.Timestamp(0)
-  customers Customer[]
-  bills     Bill[]
+  id         Int          @id @default(autoincrement()) @db.Integer
+  username   String       @unique @db.VarChar(64)
+  password   String       @db.Char(60)
+  createdAt  DateTime     @default(now()) @db.Timestamp(0)
+  updatedAt  DateTime     @default(now()) @updatedAt @db.Timestamp(0)
+  customers  Customer[]
+  bills      Bill[]
+  UserConfig UserConfig[]
 
   @@index([username, password])
   @@index([createdAt])
@@ -93,6 +94,19 @@ model BillItem {
   @@index([createdAt])
   @@index([updatedAt])
   @@map("bill_item")
+}
+
+model UserConfig {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@map("user_config")
 }
 
 enum CustomerType {
